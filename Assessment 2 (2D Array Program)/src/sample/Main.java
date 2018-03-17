@@ -1,9 +1,14 @@
 package sample;
 
+
+import enums.ClassType;
+import enums.PersonType;
+import enums.SeatType;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -19,9 +24,10 @@ public class Main extends Application {
 
     Button viewSeats, newBooking, saveBooking, cancelBooking;
     Stage window;
-    Scene main, /*_viewSeats,*/ _newBooking;
+    Scene main, _newBooking;
     GridPane gridMain, gridNew, gridView;
     Text seats = new Text(50, 150, " ");
+    SeatingArray seatingArray = new SeatingArray();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -29,13 +35,21 @@ public class Main extends Application {
             window = primaryStage;
             window.setTitle("2D Array Program");
 
+            out.println(seatingArray.AllocateSeat("George", PersonType.Adult, ClassType.First, SeatType.Window));
+            out.println(seatingArray.AllocateSeat("Alan", PersonType.Adult, ClassType.First, SeatType.Window));
+            out.println(seatingArray.AllocateSeat("Esther", PersonType.Adult, ClassType.First, SeatType.Window));
+            out.println(seatingArray.AllocateSeat("Nicola", PersonType.Adult, ClassType.First, SeatType.Window));
+            out.println(seatingArray.AllocateSeat("Jill", PersonType.Adult, ClassType.First, SeatType.Window));
+            out.println(seatingArray.AllocateSeat("Harry Potter", PersonType.Child, ClassType.Business, SeatType.Aisle));
+
+
             gridMain = new GridPane();
             gridNew = new GridPane();
             gridView = new GridPane();
             viewSeats = new Button("View Seats");
             viewSeats.setOnAction(e -> {
 
-                seats.setText(new SeatingArray().toString());
+                seats.setText(seatingArray.toString());
                 seats.setFont(Font.font("Monospaced", 27));
 
                 GridPane.setConstraints(seats, 0, 3);

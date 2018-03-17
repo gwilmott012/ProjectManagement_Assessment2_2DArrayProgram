@@ -9,13 +9,13 @@ public class SeatingArray {
     private final String HEADER = "       A B C   D E F";
     private final String ROW_LABEL = "Row ";
 
-    //Constants to define First class boundaries
-    private final int FIRST_CLASS_ROW_START = 1;
-    private final int FIRST_CLASS_ROW_END = 2;
-    private final int BUSINESS_CLASS_ROW_START = 3;
-    private final int BUSINESS_CLASS_ROW_END = 6;
-    private final int ECONOMY_CLASS_ROW_START = 7;
-    private final int ECONOMY_CLASS_ROW_END = 12;
+    //Constants to define Class boundaries (zero based values)
+    private final int FIRST_CLASS_ROW_START = 0;
+    private final int FIRST_CLASS_ROW_END = 1;
+    private final int BUSINESS_CLASS_ROW_START = 2;
+    private final int BUSINESS_CLASS_ROW_END = 5;
+    private final int ECONOMY_CLASS_ROW_START = 6;
+    private final int ECONOMY_CLASS_ROW_END = 11;
 
     private final int[] WINDOW_SEATS = new int[]{0,5};
     private final int[] MIDDLE_SEATS = new int[]{1,4};
@@ -28,10 +28,63 @@ public class SeatingArray {
         return seatingAllocation[row][column];
     }
 
-    public void AllocateSeat(String name, PersonType personType, ClassType classType, SeatType seatType) {
-
+    public String AllocateSeat(String name, PersonType personType, ClassType classType, SeatType seatType) {
         Customer customer = new Customer(name, personType, classType, seatType);
 
+        int requestedRowStart = 0;
+        int requestedRowEnd = 0;
+        int[] requestedColumns = new int[2];
+
+        switch (customer.classType){
+            case First:
+                requestedRowStart = FIRST_CLASS_ROW_START;
+                requestedRowEnd = FIRST_CLASS_ROW_END;
+                break;
+            case Business:
+                requestedRowStart = BUSINESS_CLASS_ROW_START;
+                requestedRowEnd = BUSINESS_CLASS_ROW_END;
+                break;
+            case Economy:
+                requestedRowStart = ECONOMY_CLASS_ROW_START;
+                requestedRowEnd = ECONOMY_CLASS_ROW_END;
+                break;
+        }
+
+        switch (customer.preferredSeat){
+            case Window:
+                requestedColumns = WINDOW_SEATS;
+                break;
+            case Middle:
+                requestedColumns = MIDDLE_SEATS;
+                break;
+            case Aisle:
+                requestedColumns = AISLE_SEATS;
+                break;
+        }
+
+        boolean customerAllocatedToSeat = false;
+
+        for (int row = requestedRowStart; row <= requestedRowEnd; row++){
+
+            for(int index = 0; index < requestedColumns.length; index++){
+                int column = requestedColumns[index];
+
+                if(seatEmpty(row, column)){
+                    customer.rowNumber = row;
+                    customer.columnNumber = column;
+                    seatingAllocation[row][column] = customer;
+                    customerAllocatedToSeat = true;
+                }
+
+                if (customerAllocatedToSeat)
+                    break;
+            }
+            if (customerAllocatedToSeat)
+                break;
+
+        }
+
+        return customerAllocatedToSeat ? "Seat allocation successful" : "There are no " + classType.toString().toLowerCase() + " class " + seatType.toString().toLowerCase() + " seats on this flight available.";
     }
 
     private boolean seatEmpty(int row, int column){
