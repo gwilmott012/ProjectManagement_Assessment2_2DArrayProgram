@@ -28,6 +28,7 @@ public class SeatingArray {
         return seatingAllocation[row][column];
     }
 
+    //Allocates a new customer to a particular seat on the flight
     public String AllocateSeat(String name, PersonType personType, ClassType classType, SeatType seatType) {
         Customer customer = new Customer(name, personType, classType, seatType);
 
@@ -35,6 +36,7 @@ public class SeatingArray {
         int requestedRowEnd = 0;
         int[] requestedColumns = new int[2];
 
+        // Checks for which class type the customer wants to be in
         switch (customer.classType){
             case First:
                 requestedRowStart = FIRST_CLASS_ROW_START;
@@ -50,6 +52,7 @@ public class SeatingArray {
                 break;
         }
 
+        // Checks for customers seat preference
         switch (customer.preferredSeat){
             case Window:
                 requestedColumns = WINDOW_SEATS;
@@ -62,13 +65,16 @@ public class SeatingArray {
                 break;
         }
 
+        // variable for if the customer was successfully allocated to a seat
         boolean customerAllocatedToSeat = false;
 
+        // loops through every possible row and column the customer might want to sit in
         for (int row = requestedRowStart; row <= requestedRowEnd; row++){
 
             for(int index = 0; index < requestedColumns.length; index++){
                 int column = requestedColumns[index];
 
+                // checks if the seat is empty and if it is assigns the customer to that seat.
                 if(seatEmpty(row, column)){
                     customer.rowNumber = row;
                     customer.columnNumber = column;
@@ -76,6 +82,7 @@ public class SeatingArray {
                     customerAllocatedToSeat = true;
                 }
 
+                // if the customer was allocated to a seat breaks out of loops
                 if (customerAllocatedToSeat)
                     break;
             }
@@ -84,8 +91,14 @@ public class SeatingArray {
 
         }
 
+        if(customerAllocatedToSeat) {
+            CustomerArray.getInstance().AddCustomers(seatingAllocation);
+        }
+
+
         return customerAllocatedToSeat ? "Seat allocation successful" : "There are no " + classType.toString().toLowerCase() + " class " + seatType.toString().toLowerCase() + " seats on this flight available.";
     }
+
 
     private boolean seatEmpty(int row, int column){
         return seatingAllocation[row][column] == null ? true : false;
