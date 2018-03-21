@@ -1,5 +1,8 @@
 package sample;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 /*
 
 This class is a singleton, which means that only one object can be created from it.
@@ -53,6 +56,12 @@ public class CustomerArray {
             }
         }
 
+        SortCustomersByName();
+    }
+
+    private void SortCustomersByName(){
+        // Sort through customers array sorting by customer name
+        Arrays.sort(customers, Comparator.comparing(c -> c.name));
     }
 
     //Get the number of Customers in the seatingAllocation

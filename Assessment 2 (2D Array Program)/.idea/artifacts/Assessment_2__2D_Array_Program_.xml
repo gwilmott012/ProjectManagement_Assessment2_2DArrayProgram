@@ -1,0 +1,20 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="Assessment 2 (2D Array Program)">
+    <output-path>$PROJECT_DIR$/out/artifacts/Assessment_2__2D_Array_Program_</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="sample.Main" />
+        <option name="description" value="" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="title" value="" />
+        <option name="vendor" value="" />
+        <option name="version" value="" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="Assessment_2__2D_Array_Program_.jar">
+        <element id="module-output" name="Assessment 2 (2D Array Program)" />
+      </element>
+    </root>
+  </artifact>
+</component>

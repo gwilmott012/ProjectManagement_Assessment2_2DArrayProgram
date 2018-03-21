@@ -133,11 +133,6 @@ public class SeatingArray {
                     sb.append(tmpCustomer.adultOrChild == PersonType.Adult ? "A " : tmpCustomer.adultOrChild == PersonType.Child ? "C " : "");
 
                 sb.append(column == 5 ? "\r\n" : column == 2 ? "  " : "");
-
-                //sb.append("(" + row + ", " + column + ")\r\n");
-
-
-
             }
         }
         return sb.toString();
