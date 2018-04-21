@@ -1,6 +1,9 @@
 package sample;
 
-import enums.*;
+
+import enums.ClassType;
+import enums.PersonType;
+import enums.SeatType;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -9,6 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
+
+import java.io.*;
 
 import static java.lang.System.out;
 
@@ -28,12 +33,12 @@ public class Main extends Application {
             window = primaryStage;
             window.setTitle("2D Array Program");
 
-            out.println(seatingArray.AllocateSeat("George", PersonType.Adult, ClassType.First, SeatType.Window));
+            /*out.println(seatingArray.AllocateSeat("George", PersonType.Adult, ClassType.First, SeatType.Window));
             out.println(seatingArray.AllocateSeat("Alan", PersonType.Adult, ClassType.First, SeatType.Window));
             out.println(seatingArray.AllocateSeat("Esther", PersonType.Adult, ClassType.First, SeatType.Window));
             out.println(seatingArray.AllocateSeat("Nicola", PersonType.Adult, ClassType.First, SeatType.Window));
             out.println(seatingArray.AllocateSeat("Jill", PersonType.Adult, ClassType.First, SeatType.Window));
-            out.println(seatingArray.AllocateSeat("Harry Potter", PersonType.Child, ClassType.Business, SeatType.Aisle));
+            out.println(seatingArray.AllocateSeat("Harry Potter", PersonType.Child, ClassType.Business, SeatType.Aisle));*/
 
             CustomerArray ca =  CustomerArray.getInstance();
 
@@ -61,6 +66,7 @@ public class Main extends Application {
             newBooking.setOnAction(e -> NewBooking());
             viewSeats.setOnAction(e -> ViewSeats());
             saveBooking.setOnAction(e -> SaveBooking());
+            //cancelBooking.setOnAction(e -> CancelBooking());
             SetWidth();
 
             // Aligning buttons to various spots on grid
@@ -122,17 +128,16 @@ public class Main extends Application {
         String _AdultOrChild = adultOrChild.getValue().toString();
         String _SeatType = seatType.getValue().toString();
         String _ClassType = classType.getValue().toString();
-        Customer customer = new Customer(_name.toString(), PersonType.valueOf(_AdultOrChild), ClassType.valueOf(_ClassType), SeatType.valueOf(_SeatType));
+        Customer customer = new Customer(name.toString(), PersonType.valueOf(_AdultOrChild), ClassType.valueOf(_ClassType), SeatType.valueOf(_SeatType));
 
         String message = seatingArray.AllocateSeat(customer.name, customer.adultOrChild, customer.classType, customer.preferredSeat);
 
-        if(message == "Seat allocation successful"){
+        if (message == "Seat allocation successful") {
             window.setScene(main);
             if (gridMain.getChildren().contains(seats)) {
                 viewSeats.fire();
             }
-        }
-        else{
+        } else {
             this.message.setText(message);
             this.message.setFont(new Font(16));
             this.message.setFill(new javafx.scene.paint.Color(1f, 0f, 0f, 1f));
@@ -142,7 +147,33 @@ public class Main extends Application {
             GridPane.setConstraints(saveBooking, 0, 43);
             GridPane.setConstraints(cancelBooking, 3, 43);
         }
+
+        FileWriter writer = null;
+        String customers = seatingArray.toString();
+        try {
+            writer = new FileWriter("Customers.txt");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+
+
+                writer.write(customers);
+                writer.close();
+
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
+
+    /*private void CancelBooking() {
+        window.setScene(main);
+        if (gridMain.getChildren().contains(seats)) {
+            viewSeats.fire();
+        }
+    }*/
 
     private void NewBooking() {
         name.setText("");
