@@ -25,7 +25,7 @@ public class Main extends Application {
     private Stage window;
     private Scene main, _newBooking, _cancelBooking;
     private GridPane gridMain, gridNew, gridView, gridCancel;
-    private Text seats, _name, _adultOrChild, _classType, _seatType, message, _cancelBookingName, _reservation, _description;
+    private Text seats, _name, _adultOrChild, _classType, _seatType, message, _cancelBookingName, _reservation, _reservationNumber;
     private SeatingArray seatingArray = new SeatingArray();
 
     /* (non-Javadoc)
@@ -70,12 +70,12 @@ public class Main extends Application {
             window = primaryStage;
             window.setTitle("2D Array Program");
 
-            /*out.println(seatingArray.AllocateSeat("George", PersonType.Adult, ClassType.First, SeatType.Window));
+            out.println(seatingArray.AllocateSeat("George", PersonType.Adult, ClassType.First, SeatType.Window));
             out.println(seatingArray.AllocateSeat("Alan", PersonType.Adult, ClassType.First, SeatType.Window));
             out.println(seatingArray.AllocateSeat("Esther", PersonType.Adult, ClassType.First, SeatType.Window));
             out.println(seatingArray.AllocateSeat("Nicola", PersonType.Adult, ClassType.First, SeatType.Window));
             out.println(seatingArray.AllocateSeat("Jill", PersonType.Adult, ClassType.First, SeatType.Window));
-            out.println(seatingArray.AllocateSeat("Harry Potter", PersonType.Child, ClassType.Business, SeatType.Aisle));*/
+            out.println(seatingArray.AllocateSeat("Harry Potter", PersonType.Child, ClassType.Business, SeatType.Aisle));
 
             CustomerArray ca =  CustomerArray.getInstance();
             
@@ -105,8 +105,8 @@ public class Main extends Application {
             _seatType = new Text(50, 150,"Which Seat? ");
             _classType = new Text(50, 150,"Which Class? ");
             _cancelBookingName = new Text(50,150, "Name:");
-            _reservation = new Text(50, 150, "");
-            _description = new Text(50, 150, "");
+            _reservation = new Text(50, 150, "Reservation: ");
+            _reservationNumber = new Text(50, 150, "");
             message = new Text(50, 150, "");
             message.setFill(new javafx.scene.paint.Color(1f, 0f, 0f, 1f));
             message.setFont(new Font(16));
@@ -116,7 +116,9 @@ public class Main extends Application {
             viewSeats.setOnAction(e -> ViewSeats());
             saveBooking.setOnAction(e -> SaveBooking());
             cancelNewBooking.setOnAction(e -> CancelNewBooking());
+            showCancelBooking.setOnAction(e -> ShowCancelBooking());
             cancelBooking.setOnAction(e -> CancelBooking());
+            searchBooking.setOnAction(e -> SearchBooking());
             SetWidth();
 
             // Aligning buttons to various spots on grid
@@ -133,10 +135,12 @@ public class Main extends Application {
             GridPane.setConstraints(seatType, 2, 1);
             GridPane.setConstraints(_classType, 3, 0);
             GridPane.setConstraints(classType, 3, 1);
-            //GridPane.setConstraints(_description, 0, 0);
             GridPane.setConstraints(cancelBookingName, 1, 0);
             GridPane.setConstraints(_cancelBookingName, 0, 0);
             GridPane.setConstraints(searchBooking, 2, 0);
+            GridPane.setConstraints(_reservation, 0, 1);
+            GridPane.setConstraints(_reservationNumber, 1, 1);
+            GridPane.setConstraints(cancelBooking, 2, 1);
 
 
             // Setting grids padding, vertical gap and horizontal gap
@@ -157,17 +161,16 @@ public class Main extends Application {
             gridMain.getChildren().addAll(newBooking, viewSeats, showCancelBooking);
             gridNew.getChildren().addAll(saveBooking, cancelNewBooking, _name, name, _adultOrChild, adultOrChild, _seatType, seatType, _classType, classType);
             
-            gridCancel.getChildren().addAll(searchBooking, cancelBookingName, _cancelBookingName, _reservation);//_description);
+            gridCancel.getChildren().addAll(searchBooking, cancelBookingName, _cancelBookingName);//_description);
             //gridNew.setAlignment(Pos.BOTTOM_LEFT);
 
             //Set Scenes
-            main = new Scene(gridMain, 475, 460);
+            main = new Scene(gridMain, 650, 460);
             _newBooking = new Scene(gridNew, 475, 460);
             _cancelBooking = new Scene(gridCancel, 475, 460);
 
             window.setScene(main);
             
-            CancelBooking();
             window.show();
         } catch (IllegalArgumentException ex) {
             ex.getMessage();
@@ -191,7 +194,7 @@ public class Main extends Application {
         String _AdultOrChild = adultOrChild.getValue().toString();
         String _SeatType = seatType.getValue().toString();
         String _ClassType = classType.getValue().toString();
-        Customer customer = new Customer(name.toString(), PersonType.valueOf(_AdultOrChild), ClassType.valueOf(_ClassType), SeatType.valueOf(_SeatType));
+        Customer customer = new Customer(name.getText(), PersonType.valueOf(_AdultOrChild), ClassType.valueOf(_ClassType), SeatType.valueOf(_SeatType));
 
         String message = seatingArray.AllocateSeat(customer.name, customer.adultOrChild, customer.classType, customer.preferredSeat);
 
@@ -230,9 +233,67 @@ public class Main extends Application {
 
     }
 
+    private void ShowCancelBooking() {
+    	window.setScene(_cancelBooking);
+    }
+    
+    private void SearchBooking() {
+    	String name = cancelBookingName.getText();;
+    	String column = "";
+    	Customer customer = CustomerArray.getInstance().SearchCustomer(name);
+    	if(customer == null)
+    	{
+    		AlertBox.display("Search Booking", "There is no customer named " + name);
+    	}
+    	else
+    	{
+    		switch(customer.columnNumber) {
+	    		case 0:
+	    			column = "A";
+	    			break;
+	    		case 1:
+	    			column = "B";
+	    			break;
+	    		case 2:
+	    			column = "C";
+	    			break;
+	    		case 3:
+	    			column = "D";
+	    			break;
+	    		case 4:
+	    			column = "E";
+	    			break;
+	    		case 5:
+	    			column = "F";
+	    			break;
+    		}
+    		    		
+    		_reservationNumber.setText(column + customer.rowNumber+1);
+    		gridCancel.getChildren().addAll(_reservation, _reservationNumber, cancelBooking);
+    	}
+    }
+    
     private void CancelBooking() {
-        window.setScene(_cancelBooking);
-        AlertBox.display("", "\r\nEnter the customer name then click search to find the reservation.\r\n");
+    	String name = cancelBookingName.getText();
+    	Customer customer = CustomerArray.getInstance().SearchCustomer(name);
+    	
+    	if(ConfirmBox.display("Cancel Booking", "Are you sure you want to cancel " + name + "'s booking?", "Yes", "No"))
+    	{
+    		 if(seatingArray.CancelSeatAllocation(customer.rowNumber, customer.columnNumber))
+    		 {
+    			 AlertBox.display("Cancel Booking", "Reservation for " + name + " has been cancelled");
+    		 }
+    		 else
+    		 {
+    			 AlertBox.display("Cancel Booking", "Reservation cancellation for " + name + " has failed");
+    		 }
+    	}
+    	
+    	if (gridMain.getChildren().contains(seats)) {
+            viewSeats.fire();
+        }
+    	window.setScene(main);
+    	
     }
 
     private void NewBooking() {
@@ -285,3 +346,4 @@ public class Main extends Application {
         launch(args);
     }
 }
+

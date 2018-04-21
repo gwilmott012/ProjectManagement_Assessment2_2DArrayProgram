@@ -27,6 +27,15 @@ public class SeatingArray {
     public Customer getCustomerAllocatedToSeat(int row, int column) {
         return seatingAllocation[row][column];
     }
+    
+    public boolean CancelSeatAllocation(int row, int column) {
+    	try {
+    		seatingAllocation[row][column] = null;
+    		return true;
+    	}catch(Exception ex) {
+    		return false;
+    	}
+    }
 
     //Allocates a new customer to a particular seat on the flight
     public String AllocateSeat(String name, PersonType personType, ClassType classType, SeatType seatType) {
@@ -102,10 +111,6 @@ public class SeatingArray {
 
     private boolean seatEmpty(int row, int column){
         return seatingAllocation[row][column] == null ? true : false;
-    }
-
-    public void CancelSeatAllocation(int row, int column){
-        seatingAllocation[row][column] = null;
     }
 
     @Override

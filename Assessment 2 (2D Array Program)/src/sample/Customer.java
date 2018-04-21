@@ -2,13 +2,17 @@ package sample;
 
 import enums.*;
 
-public class Customer {
+public class Customer implements Comparable<Customer> {
     String name;
     PersonType adultOrChild;
     ClassType classType;
     SeatType preferredSeat;
     int rowNumber;
     int columnNumber;
+    
+    public Customer(String _name){
+        name = _name;
+    }
 
 
     public Customer(String _name, PersonType _adultOrChild, ClassType _classType, SeatType _preferredSeat){
@@ -17,4 +21,10 @@ public class Customer {
         classType = _classType;
         preferredSeat = _preferredSeat;
     }
+
+
+	@Override
+	public int compareTo(Customer arg0) {
+		return this.name.toString().compareTo(arg0.name.toString());
+	}
 }

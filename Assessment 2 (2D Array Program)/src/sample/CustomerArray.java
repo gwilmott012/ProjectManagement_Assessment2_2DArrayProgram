@@ -1,6 +1,8 @@
 package sample;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 
 /*
@@ -13,7 +15,9 @@ methods in different classes without passing it as a parameter and I know that i
 public class CustomerArray {
     //This class variable is where the singleton object is stored when it is created
     private static CustomerArray instance = null;
-    private Customer[] customers;
+    //private Customer[] customers;
+    
+    private ArrayList<Customer> customers = new ArrayList<Customer>();
 
     //The constructor has been made private so it can't be instantiated from outside the class.
     private CustomerArray(){
@@ -31,8 +35,6 @@ public class CustomerArray {
         //How many Customers are in the 2D seatingAllocation array?
         int numberCustomers = GetNoOfCustomers(seatingAllocation);
 
-        //Set the size of the customers array to the number of Customers
-        customers = new Customer[numberCustomers];
 
         //Copy the Customers from the seatingAllocation 2D array to the customers array
         CopyCustomers(seatingAllocation);
@@ -48,7 +50,7 @@ public class CustomerArray {
                 if (customer != null) {
 
                     //Add the customer to the customer array
-                    customers[index] = customer;
+                    customers.add(customer);
 
                     //Increment the index
                     index += 1;
@@ -61,7 +63,10 @@ public class CustomerArray {
 
     private void SortCustomersByName(){
         // Sort through customers array sorting by customer name
-        Arrays.sort(customers, Comparator.comparing(c -> c.name));
+    	
+    	Collections.sort(customers);
+    	
+        //Arrays.sort(customers, Comparator.comparing(d -> d.name));
     }
 
     //Get the number of Customers in the seatingAllocation
@@ -79,9 +84,11 @@ public class CustomerArray {
         return count;
     }
 
-    private Customer SearchCustomer(String name){
+    public Customer SearchCustomer(String name){
         SortCustomersByName();
-        int index = Arrays.binarySearch(customers, new Customer(name, null, null, null));
-        return customers[index];
+        int index = Collections.binarySearch(customers, new Customer(name));
+        
+        Customer foundCustomer = customers.get(index);
+        return foundCustomer;
     }
 }
