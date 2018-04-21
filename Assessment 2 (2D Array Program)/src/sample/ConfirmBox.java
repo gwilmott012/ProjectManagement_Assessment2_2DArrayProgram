@@ -21,8 +21,8 @@ public class ConfirmBox {
         label.setText(message);
 
         //Create two buttons
-        Button yesButton = new Button("button1");
-        Button noButton = new Button("button2");
+        Button yesButton = new Button(button1);
+        Button noButton = new Button(button2);
 
         yesButton.setOnAction(e -> {
             answer = true;

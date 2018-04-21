@@ -78,4 +78,10 @@ public class CustomerArray {
         }
         return count;
     }
+
+    private Customer SearchCustomer(String name){
+        SortCustomersByName();
+        int index = Arrays.binarySearch(customers, new Customer(name, null, null, null));
+        return customers[index];
+    }
 }
