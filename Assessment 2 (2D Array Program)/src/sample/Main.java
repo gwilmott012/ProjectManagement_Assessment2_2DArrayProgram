@@ -19,7 +19,7 @@ import java.io.*;
 import static java.lang.System.out;
 
 public class Main extends Application {
-    private Button viewSeats, newBooking, saveBooking, cancelNewBooking, showCancelBooking, cancelBooking, searchBooking;
+    private Button viewSeats, newBooking, saveBooking, cancelNewBooking, showCancelBooking, cancelBooking, searchBooking, back;
     private ComboBox adultOrChild, classType, seatType;
     private TextField name, cancelBookingName;
     private Stage window;
@@ -92,6 +92,7 @@ public class Main extends Application {
             cancelBooking = new Button("Cancel");
             searchBooking = new Button("Search");
             showCancelBooking = new Button("Cancel Booking");
+            back = new Button("Back");
             
             name = new TextField();
             cancelBookingName = new TextField();
@@ -119,6 +120,7 @@ public class Main extends Application {
             showCancelBooking.setOnAction(e -> ShowCancelBooking());
             cancelBooking.setOnAction(e -> CancelBooking());
             searchBooking.setOnAction(e -> SearchBooking());
+            back.setOnAction(e -> BackToMain());
             SetWidth();
 
             // Aligning buttons to various spots on grid
@@ -141,6 +143,7 @@ public class Main extends Application {
             GridPane.setConstraints(_reservation, 0, 1);
             GridPane.setConstraints(_reservationNumber, 1, 1);
             GridPane.setConstraints(cancelBooking, 2, 1);
+            GridPane.setConstraints(back, 3, 0);
 
 
             // Setting grids padding, vertical gap and horizontal gap
@@ -161,11 +164,11 @@ public class Main extends Application {
             gridMain.getChildren().addAll(newBooking, viewSeats, showCancelBooking);
             gridNew.getChildren().addAll(saveBooking, cancelNewBooking, _name, name, _adultOrChild, adultOrChild, _seatType, seatType, _classType, classType);
             
-            gridCancel.getChildren().addAll(searchBooking, cancelBookingName, _cancelBookingName);//_description);
+            gridCancel.getChildren().addAll(searchBooking, cancelBookingName, _cancelBookingName, back);
             //gridNew.setAlignment(Pos.BOTTOM_LEFT);
 
             //Set Scenes
-            main = new Scene(gridMain, 650, 460);
+            main = new Scene(gridMain, 600, 460);
             _newBooking = new Scene(gridNew, 475, 460);
             _cancelBooking = new Scene(gridCancel, 475, 460);
 
@@ -188,6 +191,10 @@ public class Main extends Application {
         saveBooking.setMinHeight(30);
         cancelNewBooking.setMinWidth(100);
         cancelNewBooking.setMinHeight(30);
+    }
+    
+    private void BackToMain() {
+    	window.setScene(main);
     }
 
     private void SaveBooking() {
@@ -235,6 +242,13 @@ public class Main extends Application {
 
     private void ShowCancelBooking() {
     	window.setScene(_cancelBooking);
+    	
+    	cancelBookingName.setText("");
+    	
+		if(gridCancel.getChildren().contains(_reservation))
+		{
+			gridCancel.getChildren().removeAll(_reservation, _reservationNumber, cancelBooking);
+		}
     }
     
     private void SearchBooking() {
@@ -267,9 +281,15 @@ public class Main extends Application {
 	    			column = "F";
 	    			break;
     		}
-    		    		
-    		_reservationNumber.setText(column + customer.rowNumber+1);
-    		gridCancel.getChildren().addAll(_reservation, _reservationNumber, cancelBooking);
+    		
+    		
+    		
+    		_reservationNumber.setText(column + (customer.rowNumber+1));
+    		
+    		if(!gridCancel.getChildren().contains(_reservation))
+    		{
+    			gridCancel.getChildren().addAll(_reservation, _reservationNumber, cancelBooking);
+    		}
     	}
     }
     
@@ -277,24 +297,26 @@ public class Main extends Application {
     	String name = cancelBookingName.getText();
     	Customer customer = CustomerArray.getInstance().SearchCustomer(name);
     	
-    	if(ConfirmBox.display("Cancel Booking", "Are you sure you want to cancel " + name + "'s booking?", "Yes", "No"))
-    	{
-    		 if(seatingArray.CancelSeatAllocation(customer.rowNumber, customer.columnNumber))
-    		 {
-    			 AlertBox.display("Cancel Booking", "Reservation for " + name + " has been cancelled");
-    		 }
-    		 else
-    		 {
-    			 AlertBox.display("Cancel Booking", "Reservation cancellation for " + name + " has failed");
-    		 }
-    	}
     	
-    	if (gridMain.getChildren().contains(seats)) {
-            viewSeats.fire();
-        }
+	    	if(ConfirmBox.display("Cancel Booking", "Are you sure you want to cancel " + name + "'s booking?", "Yes", "No"))
+	    	{
+	    		 if(seatingArray.CancelSeatAllocation(customer.rowNumber, customer.columnNumber))
+	    		 {
+	    			 AlertBox.display("Cancel Booking", "Reservation for " + name + " has been cancelled");
+	    		 }
+	    		 else
+	    		 {
+	    			 AlertBox.display("Cancel Booking", "Reservation cancellation for " + name + " has failed");
+	    		 }
+	    	}
+	    	
+	    	if (gridMain.getChildren().contains(seats)) {
+	            viewSeats.fire();
+	        }
+    	
     	window.setScene(main);
-    	
-    }
+    }   	
+
 
     private void NewBooking() {
         name.setText("");

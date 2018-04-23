@@ -87,8 +87,13 @@ public class CustomerArray {
     public Customer SearchCustomer(String name){
         SortCustomersByName();
         int index = Collections.binarySearch(customers, new Customer(name));
+        try {
+	        Customer foundCustomer = customers.get(index);
+	        return foundCustomer;
+        } catch(Exception ex)
+        {
+        	return null;
+        }
         
-        Customer foundCustomer = customers.get(index);
-        return foundCustomer;
     }
 }

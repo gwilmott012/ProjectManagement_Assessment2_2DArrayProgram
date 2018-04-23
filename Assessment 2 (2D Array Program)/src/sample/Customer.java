@@ -25,6 +25,6 @@ public class Customer implements Comparable<Customer> {
 
 	@Override
 	public int compareTo(Customer arg0) {
-		return this.name.toString().compareTo(arg0.name.toString());
+		return this.name.toString().toLowerCase().compareTo(arg0.name.toString().toLowerCase());
 	}
 }
