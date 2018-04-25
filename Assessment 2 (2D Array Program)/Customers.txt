@@ -1,5 +1,5 @@
        A B C   D E F
-Row 1  A * *   * * A 
+Row 1  A * A   * * A 
 Row 2  A * *   * * A 
 Row 3  * * C   * * * 
 Row 4  * * *   * * * 

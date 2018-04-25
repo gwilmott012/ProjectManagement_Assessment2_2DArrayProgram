@@ -7,6 +7,8 @@ import enums.SeatType;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -25,6 +27,8 @@ public class Main extends Application {
     private TextField name, cancelBookingName;
     private Stage window;
     private Scene main, _newBooking, _cancelBooking;
+    private HBox hbox;
+    private BorderPane borderMain;
     private GridPane gridMain, gridNew, gridView, gridCancel;
     private Text seats, _name, _adultOrChild, _classType, _seatType, message, _cancelBookingName, _reservation, _reservationNumber;
     private SeatingArray seatingArray = new SeatingArray();
@@ -45,6 +49,8 @@ public class Main extends Application {
             seatingArray.AllocateSeat("Harry Potter", PersonType.Child, ClassType.Business, SeatType.Aisle);    
             
             // Instantiating grids, buttons, etc.
+            borderMain = new BorderPane();
+            hbox = new HBox();
             gridMain = new GridPane();
             gridNew = new GridPane();
             gridView = new GridPane();
@@ -111,9 +117,11 @@ public class Main extends Application {
 
 
             // Setting grids padding, vertical gap and horizontal gap
-            gridMain.setPadding(new Insets(10));
+            borderMain.setPadding(new Insets(10));
+            hbox.setAlignment(Pos.TOP_CENTER);
+            hbox.setPadding(new Insets(10));
             gridMain.setVgap(8);
-            gridMain.setHgap(10);
+            gridMain.setHgap(20);
             gridNew.setPadding(new Insets(10));
             gridNew.setVgap(8);
             gridNew.setHgap(10);
@@ -123,14 +131,21 @@ public class Main extends Application {
             gridCancel.setPadding(new Insets(10));
             gridCancel.setVgap(8);
             gridCancel.setHgap(10);
+            
+            // Setting buttons padding
+            
+            
+            
 
             // adding children to grids
             gridMain.getChildren().addAll(newBooking, viewSeats, showCancelBooking);
+            hbox.getChildren().add(gridMain);
             gridNew.getChildren().addAll(saveBooking, cancelNewBooking, _name, name, _adultOrChild, adultOrChild, _seatType, seatType, _classType, classType);
             gridCancel.getChildren().addAll(searchBooking, cancelBookingName, _cancelBookingName, back);
+            borderMain.setTop(hbox);
 
             //Set Scenes
-            main = new Scene(gridMain, 600, 460);
+            main = new Scene(borderMain, 600, 460);
             _newBooking = new Scene(gridNew, 475, 460);
             _cancelBooking = new Scene(gridCancel, 475, 460);
 
@@ -161,10 +176,9 @@ public class Main extends Application {
         seats.setText(seatingArray.toString());
         seats.setFont(Font.font("Monospaced", 27));
 
-        if (!gridMain.getChildren().contains(seats))
+        if (!borderMain.getChildren().contains(seats))
         {
-            GridPane.setConstraints(seats, 0, 3);
-            gridMain.getChildren().add(seats);
+        	borderMain.setCenter(seats);
         }
     }
 
@@ -193,7 +207,7 @@ public class Main extends Application {
 
         if (message == "Seat allocation successful") {
             window.setScene(main);
-            if (gridMain.getChildren().contains(seats)) {
+            if (borderMain.getChildren().contains(seats)) {
                 viewSeats.fire();
             }
         } else {
